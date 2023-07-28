@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_contatos/pages/create_contact/create_contact_page.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
 
@@ -14,6 +15,11 @@ class _ContactItemState extends State<ContactItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: (){
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const CreateContactPage())
+        );
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         height: 50,

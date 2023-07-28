@@ -4,6 +4,8 @@ import 'package:lista_de_contatos/pages/home/widgets/contact_item.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
 
+import '../create_contact/create_contact_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -123,7 +125,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CreateContactPage())
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
