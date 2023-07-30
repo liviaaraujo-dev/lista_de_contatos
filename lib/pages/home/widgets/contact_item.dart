@@ -15,29 +15,37 @@ class _ContactItemState extends State<ContactItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const CreateContactPage())
-        );
+            MaterialPageRoute(builder: (context) => const CreateContactPage()));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         height: 50,
         width: context.percentWidth(.8),
         decoration: BoxDecoration(
-          color: AppColors.background2,
-          borderRadius: BorderRadius.circular(40)
-        ),
+            color: AppColors.background2,
+            borderRadius: BorderRadius.circular(40)),
         child: Row(
           children: [
-            const SizedBox(width: 20,),
-            Icon(Icons.account_circle, color: AppColors.primary, size: 40,),
-            const SizedBox(width: 20,),
-            Text(widget.name, style: TextStyle(
-        color: AppColors.text,
-        fontSize: 16,
-        fontWeight: FontWeight.w500
-      ),)
+            const SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.account_circle,
+              color: AppColors.primary,
+              size: 40,
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Text(
+              widget.name,
+              style: TextStyle(
+                  color: AppColors.text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            )
           ],
         ),
       ),

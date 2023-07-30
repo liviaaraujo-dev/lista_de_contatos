@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:lista_de_contatos/pages/home/widgets/contact_item.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
@@ -14,8 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-    final List<String> items = [
+  final List<String> items = [
     'Item 1',
     'Ana Lívia',
     'Levy',
@@ -60,7 +58,9 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: Column(
               children: <Widget>[
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -71,33 +71,35 @@ class _HomePageState extends State<HomePage> {
                       decoration: InputDecoration(
                         hintText: "Search...",
                         hintStyle: TextStyle(color: AppColors.text),
-                        prefixIcon: Icon(Icons.search,color: AppColors.text, size: 20,),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AppColors.text,
+                          size: 20,
+                        ),
                         filled: true,
                         fillColor: AppColors.backgroundPurple,
                         contentPadding: EdgeInsets.all(8),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                       ),
                     ),
                   ),
-                ), 
+                ),
                 Container(
                   height: context.percentHeight(.8),
                   width: context.percentWidth(.9),
                   margin: EdgeInsets.only(top: 25),
                   child: SingleChildScrollView(
-                    child:
-                        ListView.builder(
-                          physics: ClampingScrollPhysics(),
-                          itemCount: filteredItems.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return ContactItem(name: filteredItems[index]);
-                          },
-                        ),
+                    child: ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      itemCount: filteredItems.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return ContactItem(name: filteredItems[index]);
+                      },
+                    ),
                   ),
                 ),
                 // Padding(
@@ -111,9 +113,9 @@ class _HomePageState extends State<HomePage> {
                 //       fillColor: AppColors.background3,
                 //       contentPadding: EdgeInsets.all(8),
                 //       enabledBorder: OutlineInputBorder(
-                        
+
                 //           borderRadius: BorderRadius.all(Radius.circular(20)),
-                          
+
                 //       ),
                 //     ),
                 //   ),
@@ -125,10 +127,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CreateContactPage())
-          );
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const CreateContactPage()));
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
