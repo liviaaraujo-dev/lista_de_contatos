@@ -4,13 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lista_de_contatos/repository/contact_repository.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart';
-
 import '../../models/contact_model.dart';
-import 'create_contact_repository.dart';
 
 
 class CreateContactPage extends StatefulWidget {
@@ -25,7 +24,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
   TextEditingController _email = TextEditingController();
   final MaskedTextController _phone = MaskedTextController(mask: '(00) 00000-0000');
 
-  CreateContactRepository createContactRepository = CreateContactRepository();
+  ContactRepository contactRepository = ContactRepository();
 
   XFile? _photo;
   final _picker = ImagePicker();
@@ -225,7 +224,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
                         child: ElevatedButton(
                           onPressed: (){
                             if(_email.text.isNotEmpty && _phone.text.length == 12 && _name.text.isNotEmpty) {
-                              createContactRepository.createContact(ContactModel.create(
+                              contactRepository.createContact(ContactModel.create(
                                 email: _email.text,
                                 phone: _phone.text,
                                 name: _name.text,

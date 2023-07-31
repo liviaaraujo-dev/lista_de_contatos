@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lista_de_contatos/models/contact_model.dart';
-import 'package:lista_de_contatos/pages/home/home_repository.dart';
 import 'package:lista_de_contatos/pages/home/widgets/contact_item.dart';
+import 'package:lista_de_contatos/repository/contact_repository.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
-
 import '../create_contact/create_contact_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<ContactModel> filteredItems = [];
 
-  HomeRepository homeRepository = HomeRepository();
+  ContactRepository contactRepository = ContactRepository();
   late List<ContactModel> _contacts;
 
 
@@ -36,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getContacts() async {
-    _contacts = await homeRepository.getContacts();
+    _contacts = await contactRepository.getContacts();
     filteredItems = _contacts;
     setState(() {
       
@@ -98,25 +97,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.only(top: 16,left: 16,right: 16),
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //       hintText: "Search...",
-                //       hintStyle: TextStyle(color: Colors.grey),
-                //       prefixIcon: Icon(Icons.search,color: AppColors.text, size: 20,),
-                //       filled: true,
-                //       fillColor: AppColors.background3,
-                //       contentPadding: EdgeInsets.all(8),
-                //       enabledBorder: OutlineInputBorder(
-
-                //           borderRadius: BorderRadius.all(Radius.circular(20)),
-
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // ContactItem(name: 'Ana Livia Alves')
               ],
             ),
           ),
@@ -129,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
