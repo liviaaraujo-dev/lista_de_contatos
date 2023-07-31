@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:lista_de_contatos/shared/theme/colors.dart';
+import 'package:lista_de_contatos/shared/theme/app_colors.dart';
 
 class MyThemes {
   static final darkTheme = ThemeData(

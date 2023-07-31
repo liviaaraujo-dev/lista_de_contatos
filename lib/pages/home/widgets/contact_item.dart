@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lista_de_contatos/models/contact_model.dart';
+import 'package:lista_de_contatos/pages/contact/contact_page.dart';
 import 'package:lista_de_contatos/pages/create_contact/create_contact_page.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
-import 'package:lista_de_contatos/shared/theme/colors.dart';
+import 'package:lista_de_contatos/shared/theme/app_colors.dart';
 
 class ContactItem extends StatefulWidget {
   final ContactModel contact;
@@ -18,7 +19,7 @@ class _ContactItemState extends State<ContactItem> {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const CreateContactPage()));
+            MaterialPageRoute(builder: (context) => ContactPage(contact: widget.contact,)));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),

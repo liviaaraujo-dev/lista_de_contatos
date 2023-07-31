@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lista_de_contatos/models/contact_model.dart';
 import 'package:lista_de_contatos/pages/home/widgets/contact_item.dart';
-import 'package:lista_de_contatos/repository/contact_repository.dart';
+import 'package:lista_de_contatos/repositorys/contact_repository.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
-import 'package:lista_de_contatos/shared/theme/colors.dart';
+import 'package:lista_de_contatos/shared/theme/app_colors.dart';
 import '../create_contact/create_contact_page.dart';
 
 class HomePage extends StatefulWidget {
