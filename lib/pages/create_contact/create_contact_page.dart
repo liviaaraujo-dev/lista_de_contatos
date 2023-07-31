@@ -9,6 +9,9 @@ import 'package:lista_de_contatos/shared/theme/colors.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart';
 
+import '../../models/contact_model.dart';
+import 'create_contact_repository.dart';
+
 
 class CreateContactPage extends StatefulWidget {
   const CreateContactPage({super.key});
@@ -21,6 +24,8 @@ class _CreateContactPageState extends State<CreateContactPage> {
   TextEditingController _name = TextEditingController();
   TextEditingController _email = TextEditingController();
   final MaskedTextController _phone = MaskedTextController(mask: '(00) 00000-0000');
+
+  CreateContactRepository createContactRepository = CreateContactRepository();
 
   XFile? _photo;
   final _picker = ImagePicker();
@@ -218,7 +223,16 @@ class _CreateContactPageState extends State<CreateContactPage> {
                         width: context.percentWidth(.40),
                         height: 45,
                         child: ElevatedButton(
-                          onPressed: (){}, 
+                          onPressed: (){
+                            if(_email.text.isNotEmpty && _phone.text.length == 12 && _name.text.isNotEmpty) {
+                              createContactRepository.createContact(ContactModel.create(
+                                email: _email.text,
+                                phone: _phone.text,
+                                name: _name.text,
+                                img: _photo != null ? _photo!.path : '',
+                              ));
+                            }
+                          }, 
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                           ),

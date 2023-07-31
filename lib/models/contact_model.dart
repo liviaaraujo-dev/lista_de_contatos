@@ -39,6 +39,12 @@ class ContactModel {
       this.createdAt,
       this.updatedAt});
 
+  ContactModel.create(
+    {this.name,
+    this.email,
+    this.phone,
+    this.img});
+
   ContactModel.fromJson(Map<String, dynamic> json) {
     objectId = json['objectId'];
     name = json['name'];
@@ -58,6 +64,16 @@ class ContactModel {
     data['img'] = this.img;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    return data;
+  }
+
+  
+  Map<String, dynamic> toCreateJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['phone'] = this.phone;
+    data['img'] = this.img;
     return data;
   }
 }
