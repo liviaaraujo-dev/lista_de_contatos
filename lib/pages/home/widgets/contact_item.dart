@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_contatos/models/contact_model.dart';
 import 'package:lista_de_contatos/pages/create_contact/create_contact_page.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
 
 class ContactItem extends StatefulWidget {
-  final String name;
-  const ContactItem({super.key, required this.name});
+  final ContactModel contact;
+  const ContactItem({super.key, required this.contact});
 
   @override
   State<ContactItem> createState() => _ContactItemState();
@@ -40,7 +41,7 @@ class _ContactItemState extends State<ContactItem> {
               width: 20,
             ),
             Text(
-              widget.name,
+              widget.contact.name.toString(),
               style: TextStyle(
                   color: AppColors.text,
                   fontSize: 16,

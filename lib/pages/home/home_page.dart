@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lista_de_contatos/models/contact_model.dart';
+import 'package:lista_de_contatos/pages/home/home_repository.dart';
 import 'package:lista_de_contatos/pages/home/widgets/contact_item.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:lista_de_contatos/shared/theme/colors.dart';
@@ -13,37 +15,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> items = [
-    'Item 1',
-    'Ana Lívia',
-    'Levy',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-    'Item 8',
-    'Item 9',
-    'Item 10',
-    'Item 11',
-    'Item 12',
-    'Item 13',
-  ];
+  List<ContactModel> filteredItems = [];
 
-  List<String> filteredItems = [];
+  HomeRepository homeRepository = HomeRepository();
+  late List<ContactModel> _contacts;
+
 
   @override
   void initState() {
+    _getContacts();
     super.initState();
-    filteredItems = items;
   }
 
   void _filterItems(String query) {
     setState(() {
-      filteredItems = items
-          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+      filteredItems = _contacts
+          .where((item) => item.name!.toLowerCase().contains(query.toLowerCase()))
           .toList();
+    });
+  }
+
+  Future<void> _getContacts() async {
+    _contacts = await homeRepository.getContacts();
+    filteredItems = _contacts;
+    setState(() {
+      
     });
   }
 
@@ -97,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                       itemCount: filteredItems.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return ContactItem(name: filteredItems[index]);
+                        return ContactItem(contact: filteredItems[index],);
                       },
                     ),
                   ),
