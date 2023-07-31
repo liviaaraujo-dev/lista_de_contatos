@@ -82,18 +82,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Container(
-                  height: context.percentHeight(.8),
-                  width: context.percentWidth(.9),
-                  margin: EdgeInsets.only(top: 25),
-                  child: SingleChildScrollView(
-                    child: ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      itemCount: filteredItems.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return ContactItem(contact: filteredItems[index],);
-                      },
+                Visibility(
+                  visible: filteredItems.isNotEmpty,
+                  replacement: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                  child: Container(
+                    height: context.percentHeight(.8),
+                    width: context.percentWidth(.9),
+                    margin: EdgeInsets.only(top: 25),
+                    child: SingleChildScrollView(
+                      child: ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        itemCount: filteredItems.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return ContactItem(contact: filteredItems[index],);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -107,7 +111,6 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const CreateContactPage()));
         },
-        tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
     );
