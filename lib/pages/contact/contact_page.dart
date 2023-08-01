@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lista_de_contatos/models/contact_model.dart';
@@ -23,35 +24,7 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
-
   ContactRepository _contactRepository = ContactRepository();
-
-  XFile? _photo;
-  final _picker = ImagePicker();
-
-  bool _isPhoto = false;
-
-  Future<void> _loadPicker(ImageSource source) async {
-    try {
-      final XFile? file = await _picker.pickImage(source: source);
-      if (file == null) return;
-      _photo = XFile(file.path);
-
-      if(_photo != null){
-        String path = (await path_provider.getApplicationDocumentsDirectory()).path;
-        String name = basename(_photo!.path);
-        if(source == ImageSource.camera){
-          await _photo!.saveTo("$path/$name");
-          await GallerySaver.saveImage(_photo!.path);
-        }
-        setState(() {
-          _isPhoto = true;
-        });
-      }
-    } on PlatformException catch (e) {
-      print("Falha ao carregar imagem: $e");
-    }
-  }
 
   String? encodeQueryParameters(Map<String, String> params) {
     return params.entries
@@ -90,8 +63,9 @@ class _ContactPageState extends State<ContactPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 25),
                   Container(
-                    height: context.percentHeight(.35),
+                    height: context.percentHeight(.32),
                     width: context.percentWidth(.9),
                     decoration: BoxDecoration(
                       color: AppColors.background2,
@@ -214,7 +188,7 @@ class _ContactPageState extends State<ContactPage> {
                 ),
                 InkWell(
                   onTap: (){
-                    _contactRepository.deleteContact(widget.contact.objectId!);
+                    _deleteContact(context);
                   },
                   child: Column(
                     children: [
@@ -232,53 +206,56 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  _modalPhoto(BuildContext context){
-    showModalBottomSheet(
-      context: context, 
-      backgroundColor: AppColors.background2,
-      builder: (context) {
-        return Container(
-          height: context.percentHeight(.25),
-          width: context.screenWidth,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: context.percentWidth(.50),
-                margin: EdgeInsets.only(bottom: 10),
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: (){
-                    _loadPicker(ImageSource.gallery);
-                    Navigator.pop(context);
-                  }, 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: Text('Galeria',style: TextStyle(color: Colors.white,  fontSize: 18))
-                ),
-              ),
-              Container(
-                width: context.percentWidth(.50),
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: (){
-                    _loadPicker(ImageSource.camera);
-                    Navigator.pop(context);
-                  }, 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: Text('Câmera',style: TextStyle(color: Colors.white,  fontSize: 18))
-                ),
-              )
-            ],
-          ),
+  _deleteContact(BuildContext context){
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.background2,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+          child: Container(
+            height: context.percentHeight(.20),
+            width: context.percentWidth(.2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Desejar Excluir?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
+                SizedBox(height: 15,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                      await _contactRepository.deleteContact(widget.contact.objectId!);
+                      Phoenix.rebirth(context);
+                      }, 
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                          elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    child: Text('Sim', style: TextStyle(fontSize: 16, color: Colors.white),),),
+                    SizedBox(width: 20,),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      }, 
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                          elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    child: Text('Não', style: TextStyle(fontSize: 16, color: Colors.white),),),
+                  ],
+                )
+              ],
+            ),
+          )
         );
       }
     );
   }
+  
 }
