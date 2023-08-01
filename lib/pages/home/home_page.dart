@@ -46,7 +46,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Contatos'),
+        centerTitle: true,
+        title: Text('Lista de Contatos', style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w700),),
+        backgroundColor: AppColors.backgroundPurple,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

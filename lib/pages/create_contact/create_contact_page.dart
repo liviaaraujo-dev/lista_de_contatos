@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lista_de_contatos/repositorys/contact_repository.dart';
@@ -235,7 +236,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
                                   return Dialog(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: AppColors.background2,
                                     shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(10))),
                                     child: Container(
@@ -247,8 +248,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
                                           Text('Contato Salvo!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
                                           SizedBox(height: 15,),
                                           ElevatedButton(onPressed: (){
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
+                                           Phoenix.rebirth(context);
                                           }, 
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: AppColors.primary,

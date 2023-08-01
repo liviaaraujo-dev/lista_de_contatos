@@ -45,7 +45,7 @@ class _ContactItemState extends State<ContactItem> {
               widget.contact.name.toString(),
               style: TextStyle(
                   color: AppColors.text,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w500),
             )
           ],
