@@ -1,6 +1,5 @@
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -11,6 +10,8 @@ import 'package:lista_de_contatos/repositorys/contact_repository.dart';
 import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../shared/theme/app_colors.dart';
 
 class ContactPage extends StatefulWidget {
@@ -52,6 +53,17 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+    .map((MapEntry<String, String> e) =>
+        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+    .join('&');
+  }
+
+  Future<void> _shareText(String text) async {
+    await Share.share(text);
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,8 +164,15 @@ class _ContactPageState extends State<ContactPage> {
                                 ],
                               ),
                               IconButton(
-                                onPressed: (){},
-                                icon: Icon(Icons.email, color: AppColors.text,)
+                                onPressed: (){
+                                  final Uri emailLaunchUri = Uri(
+                                    scheme: 'mailto',
+                                    path: widget.contact.email,
+                                    // query: encodeQueryParameters(<String, String>{}),
+                                  );
+                                  launchUrl(emailLaunchUri);
+                                },
+                                icon: Icon(Icons.email, color: AppColors.primary,)
                               )
                             ],
                           ),
@@ -183,6 +202,9 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                 ),
                 InkWell(
+                  onTap: () {
+                    _shareText(widget.contact.name! + '\nTelefone: ' + widget.contact.phone.toString() + '\nEmail: ' + widget.contact.email.toString());
+                  },
                   child: Column(
                     children: [
                       Icon(Icons.share, color: AppColors.text,),
