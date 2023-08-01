@@ -30,8 +30,6 @@ class _EditContactPageState extends State<EditContactPage> {
   XFile? _photo;
   final _picker = ImagePicker();
 
-  bool _isPhoto = false;
-
   Future<void> _loadPicker(ImageSource source) async {
     try {
       final XFile? file = await _picker.pickImage(source: source);
@@ -45,9 +43,6 @@ class _EditContactPageState extends State<EditContactPage> {
           await _photo!.saveTo("$path/$name");
           await GallerySaver.saveImage(_photo!.path);
         }
-        setState(() {
-          _isPhoto = true;
-        });
       }
     } on PlatformException catch (e) {
       print("Falha ao carregar imagem: $e");
@@ -97,7 +92,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 30,),
-                  _isPhoto ?
+                  widget.contactModel.img!.length > 1 || _photo != null ?
                   Center(
                     child: GestureDetector(
                     onTap: (){
@@ -105,12 +100,24 @@ class _EditContactPageState extends State<EditContactPage> {
                     },
                     child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: Image.file(
-                        File(_photo!.path), 
-                        height: 90,
-                        width: 90, 
-                        fit: BoxFit.cover,
-                      )
+                    child: Builder(
+                      builder: (context) {
+                        if(_photo != null){
+                          return Image.file(
+                              File(_photo!.path), 
+                              height: 90,
+                              width: 90, 
+                              fit: BoxFit.cover,
+                            );
+                        }
+                        return Image.file(
+                          File(widget.contactModel.img.toString()), 
+                          height: 90,
+                          width: 90, 
+                          fit: BoxFit.cover,
+                        ); 
+                      }
+                    )
                     ),
                   ),
                 )
@@ -241,11 +248,14 @@ class _EditContactPageState extends State<EditContactPage> {
                         child: ElevatedButton(
                           onPressed: (){
                             if(_email.text.length > 0 && _phone.text.length > 0 && _name.text.length > 0) {
-                              contactRepository.createContact(ContactModel.create(
+                              contactRepository.updateContact(ContactModel(
                                 email: _email.text,
+                                createdAt: widget.contactModel.createdAt,
+                                objectId: widget.contactModel.objectId,
+                                updatedAt: widget.contactModel.updatedAt,
                                 phone: _phone.text,
                                 name: _name.text,
-                                img: _photo != null ? _photo!.path : ' ',
+                                img: widget.contactModel.img,
                               ));
                             }
                           }, 
