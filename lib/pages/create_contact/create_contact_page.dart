@@ -12,7 +12,6 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart';
 import '../../models/contact_model.dart';
 
-
 class CreateContactPage extends StatefulWidget {
   const CreateContactPage({super.key});
 
@@ -231,37 +230,13 @@ class _CreateContactPageState extends State<CreateContactPage> {
                                 name: _name.text,
                                 img: _photo != null ? _photo!.path : ' ',
                               ));
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    backgroundColor: AppColors.background2,
-                                    shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                                    child: Container(
-                                      height: context.percentHeight(.20),
-                                      width: context.percentWidth(.2),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text('Contato Salvo!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
-                                          SizedBox(height: 15,),
-                                          ElevatedButton(onPressed: (){
-                                           Phoenix.rebirth(context);
-                                          }, 
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppColors.primary,
-                                               elevation: 0,
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                            ),
-                                          child: Text('Voltar', style: TextStyle(fontSize: 16, color: Colors.white),),)
-                                        ],
-                                      ),
-                                    )
-                                  );
-                                }
+                              _contactSave(context);
+                            }
+                            else{
+                             const snackBar = SnackBar(
+                               content: Text('Preeencha todos os campos'),
                               );
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar); 
                             }
                           }, 
                           style: ElevatedButton.styleFrom(
@@ -279,6 +254,40 @@ class _CreateContactPageState extends State<CreateContactPage> {
       ),
     );
 
+  }
+
+  _contactSave(BuildContext context){
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.background2,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+          child: Container(
+            height: context.percentHeight(.20),
+            width: context.percentWidth(.2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Contato Salvo!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
+                SizedBox(height: 15,),
+                ElevatedButton(onPressed: (){
+                  Phoenix.rebirth(context);
+                }, 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                      elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                child: Text('Voltar', style: TextStyle(fontSize: 16, color: Colors.white),),)
+              ],
+            ),
+          )
+        );
+      }
+    );
   }
   
   _modalPhoto(BuildContext context){
