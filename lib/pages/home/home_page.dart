@@ -84,7 +84,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Visibility(
                   visible: filteredItems.isNotEmpty,
-                  replacement: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                  replacement: Container(
+                    height: context.percentHeight(.8),
+                    width: context.percentWidth(.9),
+                    child: Center(child: CircularProgressIndicator(color: AppColors.primary))
+                  ),
                   child: Container(
                     height: context.percentHeight(.8),
                     width: context.percentWidth(.9),

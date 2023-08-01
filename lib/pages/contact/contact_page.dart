@@ -1,8 +1,16 @@
 
-import 'package:flutter/material.dart';
-import 'package:lista_de_contatos/models/contact_model.dart';
-import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lista_de_contatos/models/contact_model.dart';
+import 'package:lista_de_contatos/pages/edit_contact/edit_contact_page.dart';
+import 'package:lista_de_contatos/repositorys/contact_repository.dart';
+import 'package:lista_de_contatos/shared/helpers/size_extensions.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:path/path.dart';
 import '../../shared/theme/app_colors.dart';
 
 class ContactPage extends StatefulWidget {
@@ -14,6 +22,36 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+
+  ContactRepository _contactRepository = ContactRepository();
+
+  XFile? _photo;
+  final _picker = ImagePicker();
+
+  bool _isPhoto = false;
+
+  Future<void> _loadPicker(ImageSource source) async {
+    try {
+      final XFile? file = await _picker.pickImage(source: source);
+      if (file == null) return;
+      _photo = XFile(file.path);
+
+      if(_photo != null){
+        String path = (await path_provider.getApplicationDocumentsDirectory()).path;
+        String name = basename(_photo!.path);
+        if(source == ImageSource.camera){
+          await _photo!.saveTo("$path/$name");
+          await GallerySaver.saveImage(_photo!.path);
+        }
+        setState(() {
+          _isPhoto = true;
+        });
+      }
+    } on PlatformException catch (e) {
+      print("Falha ao carregar imagem: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +89,17 @@ class _ContactPageState extends State<ContactPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        widget.contact.img!.length > 1 ?
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.file(
+                              File(widget.contact.img!), 
+                              height: 90,
+                              width: 90, 
+                              fit: BoxFit.cover,
+                            )
+                          )
+                        :
                         Container(
                           height: 100,
                           width: 100,
@@ -83,8 +132,8 @@ class _ContactPageState extends State<ContactPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Telefone'),
-                              Text(widget.contact.phone!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),)
+                              Text('Telefone', style: TextStyle(color: AppColors.text)),
+                              Text(widget.contact.phone!, style: TextStyle(color: AppColors.text, fontSize: 20, fontWeight: FontWeight.w500),)
                             ],
                           ),
                         ),
@@ -98,13 +147,13 @@ class _ContactPageState extends State<ContactPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text('Email'),
-                                  Text(widget.contact.email!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+                                  Text('Email', style: TextStyle(color: AppColors.text)),
+                                  Text(widget.contact.email!, style: TextStyle(color: AppColors.text, fontSize: 20, fontWeight: FontWeight.w500))
                                 ],
                               ),
                               IconButton(
                                 onPressed: (){},
-                                icon: Icon(Icons.email)
+                                icon: Icon(Icons.email, color: AppColors.text,)
                               )
                             ],
                           ),
@@ -122,26 +171,33 @@ class _ContactPageState extends State<ContactPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
+                  onTap: (){
+                     Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => EditContactPage(contactModel: widget.contact,)));
+                  },
                   child: Column(
                     children: [
-                      Icon(Icons.share),
-                      Text('Editar')
+                      Icon(Icons.edit, color: AppColors.text,),
+                      Text('Editar', style: TextStyle(color: AppColors.text),)
                     ],
                   ),
                 ),
                 InkWell(
                   child: Column(
                     children: [
-                      Icon(Icons.share),
-                      Text('Compartilhar')
+                      Icon(Icons.share, color: AppColors.text,),
+                      Text('Compartilhar', style: TextStyle(color: AppColors.text),)
                     ],
                   ),
                 ),
                 InkWell(
+                  onTap: (){
+                    _contactRepository.deleteContact(widget.contact.objectId!);
+                  },
                   child: Column(
                     children: [
-                      Icon(Icons.share),
-                      Text('Excluir')
+                      Icon(Icons.delete, color: AppColors.text,),
+                      Text('Excluir', style: TextStyle(color: AppColors.text))
                     ],
                   ),
                 )
@@ -151,6 +207,56 @@ class _ContactPageState extends State<ContactPage> {
           
         ],
       ),
+    );
+  }
+
+  _modalPhoto(BuildContext context){
+    showModalBottomSheet(
+      context: context, 
+      backgroundColor: AppColors.background2,
+      builder: (context) {
+        return Container(
+          height: context.percentHeight(.25),
+          width: context.screenWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: context.percentWidth(.50),
+                margin: EdgeInsets.only(bottom: 10),
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: (){
+                    _loadPicker(ImageSource.gallery);
+                    Navigator.pop(context);
+                  }, 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                    child: Text('Galeria',style: TextStyle(color: Colors.white,  fontSize: 18))
+                ),
+              ),
+              Container(
+                width: context.percentWidth(.50),
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: (){
+                    _loadPicker(ImageSource.camera);
+                    Navigator.pop(context);
+                  }, 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                    child: Text('Câmera',style: TextStyle(color: Colors.white,  fontSize: 18))
+                ),
+              )
+            ],
+          ),
+        );
+      }
     );
   }
 }

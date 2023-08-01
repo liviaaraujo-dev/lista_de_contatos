@@ -8,7 +8,11 @@ class MyThemes {
     scaffoldBackgroundColor: AppColors.background,
     colorSchemeSeed: AppColors.primary,
     textTheme:
-        TextTheme(bodySmall: TextStyle(color: AppColors.text, fontSize: 16)),
+        TextTheme(
+          bodySmall: TextStyle(color: AppColors.text, fontSize: 16,),
+          bodyLarge: TextStyle(color: AppColors.text, fontSize: 20)  
+        ),
+      
   );
   static final lightTheme = ThemeData(
     useMaterial3: true,

@@ -12,14 +12,15 @@ import 'package:path/path.dart';
 import '../../models/contact_model.dart';
 
 
-class CreateContactPage extends StatefulWidget {
-  const CreateContactPage({super.key});
+class EditContactPage extends StatefulWidget {
+  final ContactModel contactModel;
+  const EditContactPage({super.key, required this.contactModel});
 
   @override
-  State<CreateContactPage> createState() => _CreateContactPageState();
+  State<EditContactPage> createState() => _EditContactPageState();
 }
 
-class _CreateContactPageState extends State<CreateContactPage> {
+class _EditContactPageState extends State<EditContactPage> {
   TextEditingController _name = TextEditingController();
   TextEditingController _email = TextEditingController();
   final MaskedTextController _phone = MaskedTextController(mask: '(00) 00000-0000');
@@ -54,10 +55,26 @@ class _CreateContactPageState extends State<CreateContactPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    getValues();
+    super.initState();
+  }
+
+  void getValues(){
+    setState(() {
+      _email.text = widget.contactModel.email!;
+      _name.text = widget.contactModel.name!;
+      _phone.text = widget.contactModel.phone!;
+    });
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Criar novo contato', style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.text),),
+        title: Text('Editar contato', style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.text),),
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.backgroundPurple,
         leading: IconButton(
@@ -222,46 +239,14 @@ class _CreateContactPageState extends State<CreateContactPage> {
                         width: context.percentWidth(.40),
                         height: 45,
                         child: ElevatedButton(
-                          onPressed: () async {
+                          onPressed: (){
                             if(_email.text.length > 0 && _phone.text.length > 0 && _name.text.length > 0) {
-                              await contactRepository.createContact(ContactModel.create(
+                              contactRepository.createContact(ContactModel.create(
                                 email: _email.text,
                                 phone: _phone.text,
                                 name: _name.text,
                                 img: _photo != null ? _photo!.path : ' ',
                               ));
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    backgroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                                    child: Container(
-                                      height: context.percentHeight(.20),
-                                      width: context.percentWidth(.2),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text('Contato Salvo!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
-                                          SizedBox(height: 15,),
-                                          ElevatedButton(onPressed: (){
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          }, 
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppColors.primary,
-                                               elevation: 0,
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                            ),
-                                          child: Text('Voltar', style: TextStyle(fontSize: 16, color: Colors.white),),)
-                                        ],
-                                      ),
-                                    )
-                                  );
-                                }
-                              );
                             }
                           }, 
                           style: ElevatedButton.styleFrom(
@@ -286,7 +271,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
       context: context, 
       backgroundColor: AppColors.background2,
       builder: (context) {
-        return SizedBox(
+        return Container(
           height: context.percentHeight(.25),
           width: context.screenWidth,
           child: Column(
@@ -295,7 +280,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
             children: [
               Container(
                 width: context.percentWidth(.50),
-                margin: const EdgeInsets.only(bottom: 10),
+                margin: EdgeInsets.only(bottom: 10),
                 height: 45,
                 child: ElevatedButton(
                   onPressed: (){
@@ -306,10 +291,10 @@ class _CreateContactPageState extends State<CreateContactPage> {
                     backgroundColor: AppColors.primary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: const Text('Galeria',style: TextStyle(color: Colors.white,  fontSize: 18))
+                    child: Text('Galeria',style: TextStyle(color: Colors.white,  fontSize: 18))
                 ),
               ),
-              SizedBox(
+              Container(
                 width: context.percentWidth(.50),
                 height: 45,
                 child: ElevatedButton(
@@ -321,7 +306,7 @@ class _CreateContactPageState extends State<CreateContactPage> {
                     backgroundColor: AppColors.primary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: const Text('Câmera',style: TextStyle(color: Colors.white,  fontSize: 18))
+                    child: Text('Câmera',style: TextStyle(color: Colors.white,  fontSize: 18))
                 ),
               )
             ],

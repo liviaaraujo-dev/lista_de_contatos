@@ -23,6 +23,26 @@ class ContactRepository{
       return[];
     }
   }
+
+   Future<ContactModel> getContact(String objectId) async {
+    try {
+      final response = await _dio.get(
+        'https://parseapi.back4app.com/classes/contact/' + objectId,
+        options: Options(
+          headers: {
+            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
+            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
+          },
+        ),
+      );
+
+      print(response.data);
+      return ContactModel.fromJson(response.data);
+    } catch (error) {
+      print('Erro ao fazer a requisição: $error');
+      return ContactModel();
+    }
+  }
   
  Future<void> createContact(ContactModel contactModel) async {
     try {
