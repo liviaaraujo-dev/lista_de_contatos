@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lista_de_contatos/repositorys/contact_repository.dart';
@@ -246,9 +247,9 @@ class _EditContactPageState extends State<EditContactPage> {
                         width: context.percentWidth(.40),
                         height: 45,
                         child: ElevatedButton(
-                          onPressed: (){
+                          onPressed: () async {
                             if(_email.text.length > 0 && _phone.text.length > 0 && _name.text.length > 0) {
-                              contactRepository.updateContact(ContactModel(
+                              await contactRepository.updateContact(ContactModel(
                                 email: _email.text,
                                 createdAt: widget.contactModel.createdAt,
                                 objectId: widget.contactModel.objectId,
@@ -257,6 +258,7 @@ class _EditContactPageState extends State<EditContactPage> {
                                 name: _name.text,
                                 img: widget.contactModel.img,
                               ));
+                              _contactUpdate(context);
                             }
                           }, 
                           style: ElevatedButton.styleFrom(
@@ -275,6 +277,41 @@ class _EditContactPageState extends State<EditContactPage> {
     );
 
   }
+
+  _contactUpdate(BuildContext context){
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.background2,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+          child: Container(
+            height: context.percentHeight(.20),
+            width: context.percentWidth(.2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Contato Atualizado!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
+                SizedBox(height: 15,),
+                ElevatedButton(onPressed: (){
+                  Phoenix.rebirth(context);
+                }, 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                      elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                child: Text('Voltar', style: TextStyle(fontSize: 16, color: Colors.white),),)
+              ],
+            ),
+          )
+        );
+      }
+    );
+  }
+  
   
   _modalPhoto(BuildContext context){
     showModalBottomSheet(
