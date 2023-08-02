@@ -31,12 +31,11 @@ class _EditContactPageState extends State<EditContactPage> {
   XFile? _photo;
   final _picker = ImagePicker();
 
-  Future<void> _loadPicker(ImageSource source) async {
+  Future<void> _loadPicker(ImageSource source, BuildContext context) async {
     try {
       final XFile? file = await _picker.pickImage(source: source);
       if (file == null) return;
       _photo = XFile(file.path);
-
       if(_photo != null){
         String path = (await path_provider.getApplicationDocumentsDirectory()).path;
         String name = basename(_photo!.path);
@@ -256,9 +255,9 @@ class _EditContactPageState extends State<EditContactPage> {
                                 updatedAt: widget.contactModel.updatedAt,
                                 phone: _phone.text,
                                 name: _name.text,
-                                img: widget.contactModel.img,
+                                img: _photo != null ? _photo!.path : widget.contactModel.img,
                               ));
-                              _contactUpdate(context);
+                              _contactUpdate(context, 'Contato Atualizado!');
                             }
                           }, 
                           style: ElevatedButton.styleFrom(
@@ -278,7 +277,7 @@ class _EditContactPageState extends State<EditContactPage> {
 
   }
 
-  _contactUpdate(BuildContext context){
+  _contactUpdate(BuildContext context, String _msg){
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -293,7 +292,7 @@ class _EditContactPageState extends State<EditContactPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Contato Atualizado!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
+                Text(_msg, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500,color: AppColors.text),),
                 SizedBox(height: 15,),
                 ElevatedButton(onPressed: (){
                   Phoenix.rebirth(context);
@@ -330,8 +329,8 @@ class _EditContactPageState extends State<EditContactPage> {
                 margin: EdgeInsets.only(bottom: 10),
                 height: 45,
                 child: ElevatedButton(
-                  onPressed: (){
-                    _loadPicker(ImageSource.gallery);
+                  onPressed: () async {
+                    await _loadPicker(ImageSource.gallery, context);
                     Navigator.pop(context);
                   }, 
                   style: ElevatedButton.styleFrom(
@@ -345,8 +344,8 @@ class _EditContactPageState extends State<EditContactPage> {
                 width: context.percentWidth(.50),
                 height: 45,
                 child: ElevatedButton(
-                  onPressed: (){
-                    _loadPicker(ImageSource.camera);
+                  onPressed: () async {
+                    await _loadPicker(ImageSource.camera, context);
                     Navigator.pop(context);
                   }, 
                   style: ElevatedButton.styleFrom(

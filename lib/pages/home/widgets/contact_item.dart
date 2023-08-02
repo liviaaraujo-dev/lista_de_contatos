@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lista_de_contatos/models/contact_model.dart';
 import 'package:lista_de_contatos/pages/contact/contact_page.dart';
@@ -33,11 +35,26 @@ class _ContactItemState extends State<ContactItem> {
             const SizedBox(
               width: 20,
             ),
-            Icon(
-              Icons.account_circle,
-              color: AppColors.primary,
-              size: 40,
-            ),
+            widget.contact.img!.length > 1 ?
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.file(
+                    File(widget.contact.img!), 
+                    height: 40,
+                    width: 40, 
+                    fit: BoxFit.cover,
+                  )
+                )
+              :
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(100)
+                ),
+                child: Icon(Icons.person, color: Colors.white, size: 36,)
+              ),
             const SizedBox(
               width: 20,
             ),

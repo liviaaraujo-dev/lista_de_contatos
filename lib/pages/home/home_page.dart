@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   ContactRepository contactRepository = ContactRepository();
   late List<ContactModel> _contacts;
+  bool isCarreg = false;
 
 
   @override
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _getContacts() async {
     _contacts = await contactRepository.getContacts();
     filteredItems = _contacts;
+    isCarreg = true;
     setState(() {
       
     });
@@ -55,18 +57,18 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: Column(
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                  child: SizedBox(
                     width: context.percentWidth(.9),
                     child: TextField(
                       style: TextStyle(color: AppColors.text),
                       onChanged: _filterItems,
                       decoration: InputDecoration(
-                        hintText: "Search...",
+                        hintText: "Pesquisar",
                         hintStyle: TextStyle(color: AppColors.text),
                         prefixIcon: Icon(
                           Icons.search,
@@ -75,8 +77,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         filled: true,
                         fillColor: AppColors.backgroundPurple,
-                        contentPadding: EdgeInsets.all(8),
-                        enabledBorder: OutlineInputBorder(
+                        contentPadding: const EdgeInsets.all(8),
+                        enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
@@ -85,24 +87,32 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Visibility(
-                  visible: filteredItems.isNotEmpty,
-                  replacement: Container(
+                  visible: isCarreg,
+                  replacement: SizedBox(
                     height: context.percentHeight(.8),
                     width: context.percentWidth(.9),
                     child: Center(child: CircularProgressIndicator(color: AppColors.primary))
                   ),
-                  child: Container(
+                  child: Visibility(
+                    visible: filteredItems.isNotEmpty,
+                    replacement:  SizedBox(
                     height: context.percentHeight(.8),
                     width: context.percentWidth(.9),
-                    margin: EdgeInsets.only(top: 25),
-                    child: SingleChildScrollView(
-                      child: ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        itemCount: filteredItems.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return ContactItem(contact: filteredItems[index],);
-                        },
+                    child: Center(child: Text('Nenhum contato salvo', style: TextStyle(fontSize: 18, color: AppColors.text),))
+                  ),
+                    child: Container(
+                      height: context.percentHeight(.8),
+                      width: context.percentWidth(.9),
+                      margin: const EdgeInsets.only(top: 25),
+                      child: SingleChildScrollView(
+                        child: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: filteredItems.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ContactItem(contact: filteredItems[index],);
+                          },
+                        ),
                       ),
                     ),
                   ),
