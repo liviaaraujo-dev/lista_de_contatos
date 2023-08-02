@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../models/contact_model.dart';
 
@@ -8,11 +9,11 @@ class ContactRepository{
   Future<List<ContactModel>> getContacts() async {
     try {
       final response = await _dio.get(
-        'https://parseapi.back4app.com/classes/contact',
+        dotenv.env['BASEURL']!,
         options: Options(
           headers: {
-            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
-            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
+            'X-Parse-Application-Id': dotenv.env['XPARSEAPPLICATIONID']!,
+            'X-Parse-REST-API-Key': dotenv.env['XPARSEESTAPIKEY']!,
           },
         ),
       );
@@ -23,35 +24,15 @@ class ContactRepository{
       return[];
     }
   }
-
-   Future<ContactModel> getContact(String objectId) async {
-    try {
-      final response = await _dio.get(
-        'https://parseapi.back4app.com/classes/contact/' + objectId,
-        options: Options(
-          headers: {
-            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
-            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
-          },
-        ),
-      );
-
-      print(response.data);
-      return ContactModel.fromJson(response.data);
-    } catch (error) {
-      print('Erro ao fazer a requisição: $error');
-      return ContactModel();
-    }
-  }
   
  Future<void> createContact(ContactModel contactModel) async {
     try {
       final response = await _dio.post(
-        'https://parseapi.back4app.com/classes/contact',
+        dotenv.env['BASEURL']!,
         options: Options(
           headers: {
-            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
-            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
+            'X-Parse-Application-Id': dotenv.env['XPARSEAPPLICATIONID']!,
+            'X-Parse-REST-API-Key':  dotenv.env['XPARSEESTAPIKEY']!,
           },
         ),
         data: contactModel.toCreateJson()
@@ -64,11 +45,11 @@ class ContactRepository{
   Future<void> updateContact(ContactModel contactModel) async {
     try {
       final response = await _dio.put(
-        'https://parseapi.back4app.com/classes/contact/${contactModel.objectId}',
+        dotenv.env['BASEURL']!+ contactModel.objectId.toString(),
         options: Options(
           headers: {
-            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
-            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
+            'X-Parse-Application-Id': dotenv.env['XPARSEAPPLICATIONID']!,
+            'X-Parse-REST-API-Key':  dotenv.env['XPARSEESTAPIKEY']!,
           },
         ),
         data: contactModel.toCreateJson()
@@ -78,14 +59,14 @@ class ContactRepository{
     }
   } 
 
-   Future<void> deleteContact(String $objectId) async {
+  Future<void> deleteContact(String $objectId) async {
     try {
       final response = await _dio.delete(
-        'https://parseapi.back4app.com/classes/contact/${$objectId}',
+        dotenv.env['BASEURL']!+ $objectId,
         options: Options(
           headers: {
-            'X-Parse-Application-Id': 'VWGDW6nDA9m9aac6WcJ7bmHValmHwi1yZnWe6zGZ',
-            'X-Parse-REST-API-Key': 'RERlXRsO2VAqoFPOQtiiLmAxvnGwrZ2OsYQQSgic',
+            'X-Parse-Application-Id': dotenv.env['XPARSEAPPLICATIONID']!,
+            'X-Parse-REST-API-Key':  dotenv.env['XPARSEESTAPIKEY']!,
           },
         ),
       );
